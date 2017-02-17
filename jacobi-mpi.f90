@@ -3,7 +3,7 @@ program jacobi
   use mpi
   implicit none
 
-  real(8), parameter :: top=1.0,bottom=1.0, left=1.0,right=1.0
+  real(8), parameter :: top=1.0,bottom=10.0, left=1.0,right=1.0
   integer, parameter :: max_iter=100000
   integer, parameter :: nprint=100
   integer :: nx,ny
@@ -34,7 +34,7 @@ program jacobi
   call get_command_argument(2, arg)
   read(arg,*) ny
 
-  if (myrank==0) print *,'grid size ',ny, ' x ',ny
+  if (myrank==0) print *,'grid size ',nx, ' x ',ny
 
   local_nx=nx/nsize
   if (local_nx * nsize .lt. nx) then

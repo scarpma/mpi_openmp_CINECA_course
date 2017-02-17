@@ -25,7 +25,7 @@ program jacobi
   call get_command_argument(2, arg)
   read(arg,*) ny
 
-  print *,'grid size ',ny, ' x ',nx
+  print *,'grid size ',nx, ' x ',ny
   allocate(grid(0:ny+1,0:nx+1),grid_new(0:ny+1,0:nx+1) )
 
 
@@ -35,6 +35,7 @@ program jacobi
   grid(:,0) = top
   grid(:,nx+1)=bottom
 
+  grid_new=grid
 
   ! starting conditions
   grid(1:ny,1:nx)=0.0
