@@ -21,7 +21,7 @@ int main(int argc, char*argv[]) {
   int k;
   double tmpnorm,bnorm,norm;
 
-  int size,myrank, local_nx;
+  int size,myrank; 
   MPI_Request requests[]={MPI_REQUEST_NULL, MPI_REQUEST_NULL, MPI_REQUEST_NULL, MPI_REQUEST_NULL};
 
   MPI_Init(&argc,&argv);
@@ -88,17 +88,18 @@ int main(int argc, char*argv[]) {
 
     // Halo communications
     if (myrank > 0) {
-      MPI_Isend(&grid[ny], ny, MPI_DOUBLE, myrank-1, 0, MPI_COMM_WORLD, &requests[0]);
-      MPI_Irecv(&grid[0], ny, MPI_DOUBLE, myrank-1, 0, MPI_COMM_WORLD, &requests[1]);
+      MPI_Isend(&grid[ny+3], ny, MPI_DOUBLE, myrank-1, 0, MPI_COMM_WORLD, &requests[0]);
+      MPI_Irecv(&grid[1], ny, MPI_DOUBLE, myrank-1, 0, MPI_COMM_WORLD, &requests[1]);
     }
     if (myrank < size-1) {
-      MPI_Isend(&grid[local_nx * ny], ny, MPI_DOUBLE, myrank+1, 0, MPI_COMM_WORLD, &requests[2]);
-      MPI_Irecv(&grid[(local_nx+1) * ny], ny, MPI_DOUBLE, myrank+1, 0, MPI_COMM_WORLD, &requests[3]);
+      MPI_Isend(&grid[local_nx * (ny+2)+1], ny, MPI_DOUBLE, myrank+1, 0, MPI_COMM_WORLD, &requests[2]);
+      MPI_Irecv(&grid[(local_nx+1) * (ny+2)+1], ny, MPI_DOUBLE, myrank+1, 0, MPI_COMM_WORLD, &requests[3]);
     }
     MPI_Waitall(4, requests, MPI_STATUSES_IGNORE);
 		
     // Recalculate norm
     //
+    double rnorm;
     tmpnorm=0.0;
     for (i=1;i<=local_nx;i++) {
       for (j=1;j<=ny;j++) {
@@ -128,7 +129,7 @@ int main(int argc, char*argv[]) {
   }
   // End of iterative cycle
 
-  if (myrank==0) printf("Terminated on %d iterations, Relative Norm=%e, Total time=%e seconds \n", iter,norm, MPI_Wtime - start_time);
+  if (myrank==0) printf("Terminated on %d iterations, Relative Norm=%e, Total time=%e seconds \n", iter,norm, MPI_Wtime() - start_time);
   
 
 
