@@ -77,16 +77,11 @@ program jacobi
 
   do iter=1, max_iter
 
-     if (myrank .gt. 0) then
-        call mpi_isend(grid(1,1), ny, MPI_DOUBLE, myrank-1, 0, MPI_COMM_WORLD, requests(1),ierr)
-        call mpi_irecv(grid(1,0), ny, MPI_DOUBLE, myrank-1, 0, MPI_COMM_WORLD, requests(2),ierr)
-     end if
-     if (myrank .lt. nsize-1) then
-        call mpi_isend(grid(1,local_nx), ny, MPI_DOUBLE, myrank+1, 0,MPI_COMM_WORLD,  requests(3),ierr)
-        call mpi_irecv(grid(1,local_nx+1), ny, MPI_DOUBLE, myrank+1, 0,MPI_COMM_WORLD, requests(4),ierr)
-     end if
-call mpi_waitall(4, requests, MPI_STATUSES_IGNORE, ierr)
-     tmpnorm=0.0
+     !  Insert Halo communications here
+     !  HINT: You will need  two ifs, 1 for myrank>0, 1 for myrank <nsize-1
+     !        Each if should have a MPI_Send/MPI_Recv pair. 
+     ! 
+    tmpnorm=0.0
      do j=1,local_nx
         do i=1,ny
            tmpnorm=tmpnorm+((grid(i,j)*4-grid(i-1,j)-grid(i+1,j)-grid(i,j-1)-grid(i,j+1))**2)

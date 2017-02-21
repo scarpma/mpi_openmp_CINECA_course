@@ -87,16 +87,10 @@ int main(int argc, char*argv[]) {
   for (iter=0; iter<MAX_ITER; iter++) {
 
     // Halo communications
-    if (myrank > 0) {
-      MPI_Isend(&grid[ny+3], ny, MPI_DOUBLE, myrank-1, 0, MPI_COMM_WORLD, &requests[0]);
-      MPI_Irecv(&grid[1], ny, MPI_DOUBLE, myrank-1, 0, MPI_COMM_WORLD, &requests[1]);
-    }
-    if (myrank < size-1) {
-      MPI_Isend(&grid[local_nx * (ny+2)+1], ny, MPI_DOUBLE, myrank+1, 0, MPI_COMM_WORLD, &requests[2]);
-      MPI_Irecv(&grid[(local_nx+1) * (ny+2)+1], ny, MPI_DOUBLE, myrank+1, 0, MPI_COMM_WORLD, &requests[3]);
-    }
-    MPI_Waitall(4, requests, MPI_STATUSES_IGNORE);
-		
+    // Insert halo communications here:	
+     //  HINT: You will need  two ifs, 1 for myrank>0, 1 for myrank <nsize-1
+     //        Each if should have a MPI_Send/MPI_Recv pair. 
+	
     // Recalculate norm
     //
     double rnorm;
@@ -107,6 +101,8 @@ int main(int argc, char*argv[]) {
 	tmpnorm=tmpnorm+pow(grid[k]*4-grid[k-1]-grid[k+1] - grid[k-(ny+2)] - grid[k+(ny+2)], 2); 
       }
     }
+
+    // Sum up all the tmpnorms and copy to all nodes
     MPI_Allreduce(&tmpnorm, &rnorm, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     norm=sqrt(rnorm)/bnorm;
 
