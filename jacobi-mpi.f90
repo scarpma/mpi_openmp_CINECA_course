@@ -88,7 +88,8 @@ program jacobi
         enddo
      enddo
 
-     call mpi_allreduce(tmpnorm, rnorm, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD, ierr)
+     ! at this stage you need to collect all the tmpnorms and sum them up
+     ! mpi command here
      norm=sqrt(rnorm)/bnorm
  
     if (norm .lt. tol) exit

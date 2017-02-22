@@ -103,7 +103,7 @@ int main(int argc, char*argv[]) {
     }
 
     // Sum up all the tmpnorms and copy to all nodes
-    MPI_Allreduce(&tmpnorm, &rnorm, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    // mpi command here
     norm=sqrt(rnorm)/bnorm;
 
     // Convergence test
