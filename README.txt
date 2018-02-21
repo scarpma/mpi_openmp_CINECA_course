@@ -2,10 +2,9 @@
  
  
 
-```bash
- ssh username@login.galileo.cineca.it
+
+ssh username@login.galileo.cineca.it
 git clone https://gitlab.hpc.cineca.it/training/mpi-openmp.git
 
-```
 
  
