@@ -1,0 +1,13 @@
+#!/bin/bash
+#PBS -N exercise
+#PBS -o exer.out
+#PBS -e exer.err
+#PBS -l walltime=0:10:00
+#PBS -l select=1:ncpus=4:mem=10GB
+#PBS -A train_cmpB2018
+#PBS -q R3517183
+
+cd $PBS_O_WORKDIR
+module load autoload intelmpi
+
+mpirun -n 4 ./exercise.x
