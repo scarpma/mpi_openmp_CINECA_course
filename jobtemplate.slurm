@@ -3,7 +3,8 @@
 #SBATCH --tasks-per-node=4
 #SBATCH --account=#ACCOUNT#
 #SBATCH --time=10:00
+#SBATCH --partition=gll_usr_prod
 
 module load autoload intelmpi
 
-mpirun -n 4 ./exercise.x
+srun -n 4 ./exercise.x

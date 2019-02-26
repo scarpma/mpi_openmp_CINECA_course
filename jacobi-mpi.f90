@@ -97,7 +97,7 @@ program jacobi
      ! send first data column into right halo region of myank-1, recv last data column from myrank-1 into
      ! left halo (not needed for rank 0)
 
-     ! send last data column into right halo regioni of myrank+1, recv first data column from
+     ! send last data column into right halo region of myrank+1, recv first data column from
      ! myrank+1 into  left haloi (not needed for rank size-1)
 
      tmpnorm=0.0
