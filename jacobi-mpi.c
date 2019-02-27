@@ -87,10 +87,10 @@ int main(int argc, char * argv[]) {
      
 
     //  send first data column into right halo region of myank-1, recv last data column from myrank-1 into
-    //  left halo
+    //  left halo (not needed for rank 0)
 
     //  send last data column into right halo regioni of myrank+1, recv first data column from
-    //  myrank+1 into  left halo
+    //  myrank+1 into  left halo (not needed for rank -1)
 
 		tmpnorm=0.0;
 		for (i=1;i<=local_nx;i++) {
