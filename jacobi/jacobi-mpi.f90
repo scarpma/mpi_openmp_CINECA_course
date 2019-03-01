@@ -92,13 +92,14 @@ program jacobi
   do k=0, MAX_ITERATIONS
 
      ! Copy boundaries into halo regions
-     ! 
+     ! 2 conditions needed here for the left (rank 0) and right boundaries (rank
+     ! size-1)
 
      ! send first data column into right halo region of myank-1, recv last data column from myrank-1 into
-     ! left halo
+     ! left halo (not needed for rank 0)
 
      ! send last data column into right halo regioni of myrank+1, recv first data column from
-     ! myrank+1 into  left halo
+     ! myrank+1 into  left halo (not needed for rank=size-1)
 
      tmpnorm=0.0
      do j=1, local_nx

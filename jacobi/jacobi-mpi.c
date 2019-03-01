@@ -81,16 +81,16 @@ int main(int argc, char * argv[]) {
  
 	
                // Here you need to arange the halo exchange neighbouring domains
-               // Consider 2 cases: domains with rank > 0  and rank < size	
+               // Consider 2 cases: domains with rank > 0  and rank < size-1	
 
      // Copy boundaries into halo regions
      
 
-    //  send first data column into right halo region of myank-1, recv last data column from myrank-1 into
-    //  left halo
+    //  send first data row into right halo region of myrank-1, recv last data row from myrank-1 into
+    //  left halo (not needed for rank 0)
 
-    //  send last data column into right halo regioni of myrank+1, recv first data column from
-    //  myrank+1 into  left halo
+    //  send last data row into right halo regioni of myrank+1, recv first data row from
+    //  myrank+1 into  left halo (not needed for rank <size-1)
 
 		tmpnorm=0.0;
 		for (i=1;i<=local_nx;i++) {
