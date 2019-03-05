@@ -46,9 +46,10 @@ int main(int argc, char*argv[]) {
    
   // Initialise rest of grid
   for (i=1;i<=nx;i++) 
-    for (j=1;j<=ny;j++)
+    for (j=1;j<=ny;j++) {
       k=(ny+2)*i+j;
       grid_new[k]=grid[k]=0.0;
+}
    
 /*  for (i=0;i<=nx+1;i++) {
     for (j=0;j<=ny+1;j++){
