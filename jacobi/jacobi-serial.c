@@ -10,7 +10,7 @@
 // Algorithm settings
 #define TOLERANCE 0.0001
 #define NPRINT 1000
-#define MAX_ITER 10000
+#define MAX_ITER 500000
 
 int main(int argc, char*argv[]) {
 
