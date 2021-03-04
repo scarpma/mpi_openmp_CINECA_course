@@ -11,4 +11,6 @@ v2 : Try to include also the while loop in the parallel region
 
 v3 : (Fortran users only): Also the part about the "T" array-sintax may be parallelized... (hint: use "omp workshare")
 
+WARNING for C programmers: compile adding the -lm flag in order to link the mathematical library for fmax function
+
 WARNING for C programmers: the solution may differ depending on what version of OpenMP is installed on your workstation, thus be careful to use 3.1 version or older.

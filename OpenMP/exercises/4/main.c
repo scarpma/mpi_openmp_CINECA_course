@@ -1,6 +1,4 @@
 // solves 2-D Laplace equation using a relaxation scheme
-#define MAX(A,B) (((A) > (B)) ? (A) : (B))
-
 #include <stdio.h>
 #include <math.h>
 #include <float.h>
@@ -49,7 +47,7 @@ int main() {
          for (j=1; j<=n; ++j) {         
             Tnew[i*n2+j] = 0.25*( T[(i-1)*n2+j] + T[(i+1)*n2+j] 
                                 + T[i*n2+(j-1)] + T[i*n2+(j+1)] );
-                  var = MAX(var, fabs(Tnew[i*n2+j] - T[i*n2+j]));
+                  var = fmax(var, fabs(Tnew[i*n2+j] - T[i*n2+j]));
          }
       }
     
