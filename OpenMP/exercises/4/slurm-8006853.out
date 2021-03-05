@@ -1,0 +1,15 @@
+ iter, variation:     100  0.3554E+00
+ iter, variation:     200  0.1772E+00
+ iter, variation:     300  0.1177E+00
+ iter, variation:     400  0.8799E-01
+ iter, variation:     500  0.7019E-01
+ iter, variation:     600  0.5837E-01
+ iter, variation:     700  0.4992E-01
+ iter, variation:     800  0.4358E-01
+ iter, variation:     900  0.3867E-01
+ iter, variation:    1000  0.3473E-01
+
+ Elapsed time (s)     =    8.2393
+ Mesh size            =        1000
+ Stopped at iteration =        1001
+ The maximum error    =   3.4717757207765487E-002

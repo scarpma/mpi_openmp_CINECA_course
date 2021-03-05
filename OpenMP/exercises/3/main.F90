@@ -11,6 +11,9 @@
 !  interval is: (1/n)*4/(1+x*x).              c
 !---------------------------------------------c
 program pigreco
+#ifdef _OPENMP
+    use omp_lib
+#endif
     implicit none
 
     integer(selected_int_kind(18)) :: i 
@@ -20,23 +23,34 @@ program pigreco
     real(kind(1.d0)) :: f,pi
 
     real(kind(1.d0)), parameter :: PI25DT = acos(-1.d0)
-    real :: time1, time2
-
+    real(8) :: time1, time2
+#ifdef _OPENMP
+    time1 = omp_get_wtime()
+#else
     call cpu_time(time1)
+#endif
 
     print *, 'Number of intervals: ', intervals
     sum=0.d0
     dx=1.d0/intervals
 
+!$omp parallel private(x,f)
+!$omp do reduction (+:sum)
     do i=1,intervals
         x=dx*(i-0.5d0)
         f=4.d0/(1.d0+x*x)
         sum=sum+f
     end do
+!$omp end parallel
 
     pi=dx*sum
 
+#ifdef _OPENMP
+    print *, "openmp"
+    time2 = omp_get_wtime()
+#else
     call cpu_time(time2)
+#endif
 
     PRINT '(a13,2x,f30.25)',' Computed PI =', pi
     PRINT '(a13,2x,f30.25)',' The True PI =', PI25DT

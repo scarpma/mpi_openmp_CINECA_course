@@ -1,9 +1,19 @@
 program Nbody
+#ifdef _OPENMP
+   use omp_lib
+#endif
    implicit none
    real(kind(1.d0)) :: pos(3,DIM), forces(3, DIM), f(3), ene
    real(kind(1.d0)) :: rij(3), d2, d, cut2=1000.d0
    integer :: i, j, k, nbodies=DIM
    character(50) :: fn
+   real(8) :: time1, time2
+
+#ifdef _openmp
+    time1 = omp_get_wtime()
+#else
+    call cpu_time(time1)
+#endif
 
    write(fn,'("positions.xyz.",I0)') nbodies
    open(11,FILE=fn)
@@ -13,6 +23,7 @@ program Nbody
    forces = 0.d0
    ene = 0.d0
 
+!$omp parallel do private(i,j,k,rij,d,d2,f) reduction(+:ene) schedule(guided)
    do i = 1, nbodies
       do j = i+1, nbodies
          rij(:) = pos(:,i) - pos(:,j)
@@ -23,15 +34,33 @@ program Nbody
          if (d2 .le. cut2) then
             d = sqrt(d2)
             f(:) = - 1.d0 / d**3 * rij(:)
-            forces(:,i) = forces(:,i) +  f(:)
-            forces(:,j) = forces(:,j) -  f(:)
+            do k=1, 3
+!$omp atomic
+              forces(k,i) = forces(k,i) +  f(k)
+!$omp atomic
+              forces(k,j) = forces(k,j) -  f(k)
+            end do
             ene = ene + (-1.d0/d)
          end if
       end do
    end do
+!$omp end parallel do
 
+#ifdef _OPENMP
+      open(12,FILE='results_p')
+#else
       open(12,FILE='results')
+#endif
       write (12,fmt='(e20.10)') ene
       write (12,fmt='(i5,1x,3e20.10)') (i,  forces(:, i), i =1, nbodies)
       close(12)
+
+#ifdef _openmp
+    time2 = omp_get_wtime()
+#else
+    call cpu_time(time2)
+#endif
+
+print *, "elapsed time: ", time2-time1
+
 end program Nbody

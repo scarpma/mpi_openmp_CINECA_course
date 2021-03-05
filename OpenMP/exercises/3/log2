@@ -1,0 +1,6 @@
+ Number of intervals:             100000000
+ openmp
+ Computed PI      3.1415926535896825377847108
+ The True PI      3.1415926535897931159979635
+  
+ Elapsed time   0.48134230822324753       s

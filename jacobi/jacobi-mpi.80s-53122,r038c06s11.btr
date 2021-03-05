@@ -1,0 +1,7 @@
+
+jacobi-mpi:53122 terminated with signal 11 at PC=2aec55a5e7ad SP=7ffd82a47730.  Backtrace:
+/cineca/prod/opt/compilers/intel/pe-xe-2018/binary/impi/2018.4.274/lib64/libmpifort.so.12(pmpi_recv_+0x7d)[0x2aec55a5e7ad]
+./jacobi-mpi[0x40565a]
+./jacobi-mpi[0x40341e]
+/lib64/libc.so.6(__libc_start_main+0xf5)[0x2aec572b5c05]
+./jacobi-mpi[0x403329]

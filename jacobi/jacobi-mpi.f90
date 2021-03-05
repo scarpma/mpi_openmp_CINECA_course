@@ -48,6 +48,9 @@ program jacobi
      print *, "Global size in X=", nx, "Global size in Y=", ny
   end if
 
+  ! aggiusto colonne rimanenti modificando il numero di colonne nei primi
+  ! processi
+
   local_nx=nx/size
   if (local_nx * size .lt. nx) then
      if (myrank .lt. nx - local_nx * size) local_nx=local_nx+1
@@ -59,7 +62,7 @@ program jacobi
   tmpnorm=0.0
   rnorm=0.0
 
-  ! intialise values
+  ! intialise ghost values
   if (myrank ==0) then
      grid(:,0)=LEFT
   else
@@ -75,16 +78,20 @@ program jacobi
   grid(0,:)=TOP
   grid(ny+1,:)=BOTTOM
 
-  ! updateable grid points
+  ! initialize updateable grid points
   grid(1:ny,1:local_nx)=0.d0
   grid_new=grid
 
 
-  do j=1, local_nx
-     do i=1, ny
+  ! calcolo normalizzazione iniziale (non mi servono le ghost cells perch'e sto
+  ! con tutti zeri
+  do j=1, local_nx ! colonna
+     do i=1, ny    ! riga
         tmpnorm=tmpnorm+((grid(i,j)*4-grid(i-1,j)-grid(i+1,j)-grid(i,j-1)-grid(i,j+1)) ** 2)
      end do
   end do
+  ! sommo valori sulle varie righe per calcolare la norma della matrice
+  ! e la sposto in "bnorm" su ogni processo
   call mpi_allreduce(tmpnorm, bnorm, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD, ierr)
   bnorm=sqrt(bnorm)
 
@@ -94,6 +101,26 @@ program jacobi
      ! Copy boundaries into halo regions
      ! 2 conditions needed here for the left (rank 0) and right boundaries (rank
      ! size-1)
+     if (myrank > 0 )        then
+         print *, 'me ', myrank, ' recv lf'
+         call mpi_sendrecv(grid(1:ny,0)         , ny, MPI_DOUBLE, myrank-1, 0, grid()  MPI_COMM_WORLD, ierr)
+         print *, 'me ', myrank, 'done', ierr
+     end if
+     if (myrank < size - 1 ) then
+         print *, 'me ', myrank, ' send rt'
+         call mpi_send(grid(1:ny,local_nx)  , ny, MPI_DOUBLE, myrank+1, 0, MPI_COMM_WORLD, ierr)
+         print *, 'me ', myrank, 'done', ierr
+     end if 
+     if (myrank > 0 )        then
+         print *, 'me ', myrank, ' send lf'
+         call mpi_send(grid(1:ny,1)         , ny, MPI_DOUBLE, myrank-1, 0, MPI_COMM_WORLD, ierr)
+         print *, 'me ', myrank, 'done', ierr
+     end if
+     if (myrank < size - 1 ) then
+         print *, 'me ', myrank, 'recv rt'
+         call mpi_recv(grid(1:ny,local_nx+1), ny, MPI_DOUBLE, myrank+1, 0, MPI_COMM_WORLD, ierr)
+         print *, 'me ', myrank, 'done', ierr
+     end if
 
      ! send first data column into right halo region of myank-1, recv last data column from myrank-1 into
      ! left halo (not needed for rank 0)
